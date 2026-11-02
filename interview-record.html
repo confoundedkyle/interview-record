@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interview Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0EE;
+  --surface:#FFFFFF;
+  --ink:#141F1B;
+  --muted:#5D6B65;
+  --rule:#CBD4CF;
+  --rule-strong:#A7B4AE;
+  --signal:#A25E00;
+  --signal-bg:#FBF1E2;
+  --field:#FFFFFF;
+  --r1:#B3261E; --r2:#EFC42E; --r3:#6FBF5B; --r4:#216E39;
+  --on1:#FFFFFF; --on2:#141F1B; --on3:#141F1B; --on4:#FFFFFF;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Spline Sans Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101815;
+    --surface:#18211E;
+    --ink:#E6EDEA;
+    --muted:#9AA8A2;
+    --rule:#2C3833;
+    --rule-strong:#42514B;
+    --signal:#E0A254;
+    --signal-bg:#2A2114;
+    --field:#121A17;
+    --r1:#D9453B; --r2:#F0CA45; --r3:#7FCB6A; --r4:#2E8B4E;
+    --on1:#FFFFFF; --on2:#141F1B; --on3:#141F1B; --on4:#FFFFFF;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101815;
+  --surface:#18211E;
+  --ink:#E6EDEA;
+  --muted:#9AA8A2;
+  --rule:#2C3833;
+  --rule-strong:#42514B;
+  --signal:#E0A254;
+  --signal-bg:#2A2114;
+  --field:#121A17;
+  --r1:#D9453B; --r2:#F0CA45; --r3:#7FCB6A; --r4:#2E8B4E;
+  --on1:#FFFFFF; --on2:#141F1B; --on3:#141F1B; --on4:#FFFFFF;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:38rem;margin:0 auto;padding:1.5rem 1.25rem 5rem}
+
+/* ---- header ---- */
+header{margin:0 0 2.25rem}
+h1{font-size:1.5rem;font-weight:600;letter-spacing:-.015em;margin:0 0 .3rem;line-height:1.2}
+.top-by{margin:0 0 1.1rem;font-size:.875rem;color:var(--muted)}
+.top-by strong{color:var(--ink);font-weight:600}
+.sub{color:var(--muted);margin:0 0 .75rem;font-size:.9375rem;max-width:34rem;line-height:1.55}
+.sub:last-child{margin-bottom:0}
+.sub b{color:var(--ink);font-weight:600}
+
+/* ---- sections ---- */
+section{margin:0 0 2.25rem}
+.sec-head{
+  display:flex;align-items:baseline;gap:.6rem;
+  padding-bottom:.5rem;margin-bottom:1.25rem;border-bottom:1px solid var(--rule-strong);
+}
+.sec-head h2{font-size:1rem;font-weight:600;margin:0}
+.sec-head span{font-size:.8125rem;color:var(--muted)}
+
+/* ---- fields ---- */
+.f{margin:0 0 1.35rem}
+.f-top{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
+label,.lbl{font-size:.9375rem;font-weight:500}
+.req{color:var(--signal);font-weight:400}
+.info{
+  width:1.15rem;height:1.15rem;flex:0 0 auto;border-radius:50%;
+  border:1px solid var(--rule-strong);background:transparent;color:var(--muted);
+  font-family:var(--sans);font-size:.7rem;font-weight:600;font-style:italic;
+  line-height:1;cursor:pointer;padding:0;
+}
+.info:hover{border-color:var(--signal);color:var(--signal)}
+.info[aria-expanded="true"]{background:var(--signal);border-color:var(--signal);color:var(--surface)}
+.info:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{
+  outline:2px solid var(--signal);outline-offset:2px;
+}
+.panel{
+  display:none;border-left:2px solid var(--signal);background:var(--signal-bg);
+  padding:.75rem .9rem;margin:0 0 .6rem;font-size:.875rem;line-height:1.5;
+}
+.panel.open{display:block}
+.panel p{margin:0 0 .5rem}
+.panel p:last-child{margin:0}
+.panel b{font-weight:600}
+.panel cite{display:block;margin-top:.5rem;font-style:normal;font-size:.8125rem;color:var(--muted)}
+
+input[type=text],input[type=number],select,textarea{
+  width:100%;font-family:var(--sans);font-size:1rem;color:var(--ink);
+  background:var(--field);border:1px solid var(--rule);border-radius:0;
+  padding:.6rem .7rem;
+}
+textarea{resize:vertical;min-height:7rem;line-height:1.55}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:2.2rem}
+input:focus,select:focus,textarea:focus{border-color:var(--signal)}
+
+.pair,.pair-head{display:flex;gap:.5rem;flex-wrap:nowrap;align-items:center}
+.pair>input:first-child,.pair-head .col-main{flex:1 1 8rem;min-width:0}
+.pair>input:last-child,.pair-head .col-side{flex:0 0 6rem}
+.pair-head .col-main{display:flex;align-items:center;gap:.4rem}
+.slot{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.slot input{width:4.25rem;text-align:center}
+.slot span{color:var(--muted);font-size:.9375rem}
+.suffix{display:flex;align-items:center;gap:.55rem}
+.suffix input{width:6rem}
+
+/* ---- radios ---- */
+.opts{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule)}
+.opts label{
+  display:flex;gap:.65rem;align-items:flex-start;padding:.7rem .75rem;cursor:pointer;
+  border-bottom:1px solid var(--rule);background:var(--field);font-weight:400;
+}
+.opts label:last-child{border-bottom:0}
+.opts input{margin:.28rem 0 0;accent-color:var(--signal);flex:0 0 auto}
+.opts label:has(input:checked){background:var(--signal-bg)}
+.opts .o-main{font-size:.9375rem}
+.opts .o-sub{display:block;font-size:.8125rem;color:var(--muted);margin-top:.1rem}
+
+/* ---- rating ---- */
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+.rate label{
+  display:flex;flex-direction:column;align-items:center;gap:.2rem;cursor:pointer;
+  border:1px solid var(--rule);background:var(--field);padding:.65rem .3rem;text-align:center;
+}
+.rate input{position:absolute;opacity:0;width:0;height:0}
+.rate .n{font-family:var(--mono);font-size:1.25rem;font-weight:500}
+.rate .t{font-size:.75rem;color:var(--muted);line-height:1.25}
+.rate label{position:relative;padding-top:.95rem}
+.rate label::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--c)}
+.rate label[data-v="1"]{--c:var(--r1);--on:var(--on1)} .rate label[data-v="2"]{--c:var(--r2);--on:var(--on2)}
+.rate label[data-v="3"]{--c:var(--r3);--on:var(--on3)} .rate label[data-v="4"]{--c:var(--r4);--on:var(--on4)}
+.rate label:has(input:checked){background:var(--c);border-color:var(--c)}
+.rate label:has(input:checked) .n,.rate label:has(input:checked) .t{color:var(--on)}
+.rate label:has(input:checked)::before{background:var(--on);opacity:.4}
+.threshold{
+  display:flex;align-items:center;gap:.5rem;margin-top:.5rem;
+  font-size:.8125rem;color:var(--muted);
+}
+.threshold::before{content:"";height:1px;flex:1;background:var(--rule)}
+.threshold::after{content:"";height:1px;flex:1;background:var(--rule)}
+
+.call{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.call label{
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  border:1px solid var(--rule);background:var(--field);padding:.8rem .5rem;
+  font-size:.9375rem;font-weight:500;text-align:center;
+}
+.call input{position:absolute;opacity:0;width:0;height:0}
+.call label[data-v="yes"]{--c:var(--r4);--on:var(--on4)}
+.call label[data-v="no"]{--c:var(--r1);--on:var(--on1)}
+.call label:has(input:checked){background:var(--c);border-color:var(--c);color:var(--on)}
+
+/* ---- flags ---- */
+.flag{
+  display:none;margin-top:.55rem;padding:.65rem .8rem;
+  background:var(--signal-bg);border-left:2px solid var(--signal);
+  font-size:.875rem;line-height:1.5;
+}
+.flag.on{display:block}
+.flag b{font-weight:600}
+
+/* ---- actions ---- */
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--rule-strong)}
+button.act{
+  font-family:var(--sans);font-size:.9375rem;font-weight:500;padding:.7rem 1.1rem;
+  border-radius:0;cursor:pointer;border:1px solid var(--ink);
+}
+.primary{background:var(--ink);color:var(--paper)}
+.miss{border-color:var(--r1)!important;background:var(--signal-bg)}
+.opts.miss,.rate.miss,.call.miss{outline:1px solid var(--r1);outline-offset:2px;background:transparent}
+.saved.warn{color:var(--r1)}
+.help{font-size:.8125rem;color:var(--muted);margin:.45rem 0 0;line-height:1.5}
+.help #evidCount{font-family:var(--mono);font-weight:500}
+.help.ok #evidCount{color:var(--r4)}
+.help.short #evidCount{color:var(--r1)}
+
+.byline{
+  margin-top:2.5rem;padding-top:1.1rem;border-top:1px solid var(--rule-strong);
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;
+}
+.byline p{margin:0;font-size:.8125rem;color:var(--muted)}
+.byline strong{color:var(--ink);font-weight:600}
+
+.connect{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+.connect-head{display:flex;align-items:center;gap:.45rem}
+#p-connect{margin-top:.8rem;max-width:34rem}
+#p-connect p{margin:0 0 .55rem}
+.link{
+  background:none;border:0;padding:0;cursor:pointer;color:var(--muted);
+  font-family:var(--sans);font-size:.875rem;text-decoration:underline;text-underline-offset:3px;
+}
+.link:hover{color:var(--signal)}
+.link[aria-expanded="true"]{color:var(--ink)}
+.connect-body{display:none;margin-top:.9rem;max-width:34rem}
+.connect-body.open{display:block}
+.connect-body p{font-size:.875rem;color:var(--muted);margin:0 0 .7rem;line-height:1.55}
+.connect-body input{font-family:var(--mono);font-size:.8125rem}
+.connect-actions{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.connect-actions .act{padding:.5rem .85rem;font-size:.875rem}
+.connect-state{margin:.8rem 0 0!important;font-size:.8125rem!important}
+.connect-state.live{color:var(--r4)}
+.connect-state.bad{color:var(--r1)}
+.sending{color:var(--muted)}
+.sent{color:var(--r4)}
+.failed{color:var(--r1)}
+.ghost{background:transparent;color:var(--ink)}
+.saved{font-size:.8125rem;color:var(--muted);margin-top:.9rem;min-height:1.2em}
+.out{
+  display:none;margin-top:1.25rem;background:var(--surface);
+  border:1px solid var(--rule-strong);padding:1rem;
+}
+.out.open{display:block}
+.out h3{margin:0 0 .6rem;font-size:.9375rem;font-weight:600}
+.summary{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.45rem .9rem;font-size:.9375rem}
+.summary dt{color:var(--muted)}
+.summary dd{margin:0}
+.summary dd .pill{font-family:var(--mono);font-weight:500}
+.summary dd.ev{white-space:pre-wrap;line-height:1.5}
+.where{font-size:.875rem;color:var(--muted);margin:1.1rem 0 0;padding-top:.9rem;border-top:1px solid var(--rule);line-height:1.5}
+@media print{
+  :root{--paper:#fff;--surface:#fff;--ink:#000;--muted:#444;--rule:#bbb;--rule-strong:#888}
+  header,section,.actions,.saved,.where{display:none!important}
+  .out{display:block!important;border:0;padding:0}
+  .out h3{font-size:1.25rem;margin-bottom:1rem}
+  .summary{font-size:11pt}
+  body{background:#fff}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:26rem){
+  .rate{grid-template-columns:repeat(2,1fr)}
+  .wrap{padding:1rem .9rem 4rem}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Interview record</h1>
+  <p class="top-by">by <strong>Kyle Byrd</strong></p>
+  <p class="sub">This captures one interview &mdash; one seat in one loop &mdash; in a form that can be analysed afterwards. Filled in consistently across a loop, these records show what each round actually contributed, which interviewers run harsh or generous against the same rubric across every loop they sit on, and whether a fifth interview is telling you anything the first four didn't.</p>
+  <p class="sub">Some fields are here for that longer view rather than for this one hire. The small <b>i</b> beside each one explains what it's for.</p>
+  <p class="sub">When you finish, <b>Save record</b> gives you three ways out: text formatted to paste into your ATS, a JSON file to feed a tracking sheet, or a printable version to email or attach.</p>
+</header>
+
+<form id="form" novalidate>
+
+<section>
+  <div class="sec-head"><h2>The seat</h2><span>who sat where</span></div>
+
+  <div class="f">
+    <div class="f-top"><label for="cand">Candidate reference <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-cand" aria-expanded="false" aria-controls="p-cand">i</button></div>
+    <div class="panel" id="p-cand" role="region">
+      <p><b>What</b> — the ATS candidate ID, not their name. A code keeps the record usable in analysis without carrying personal data around.</p>
+      <p><b>Why</b> — this is the join key. Without it a scorecard can't be matched to the other rounds in its own loop, to the hiring decision, or to performance data later. It's the field that turns loose scorecards into a dataset.</p>
+    </div>
+    <input type="text" id="cand" name="cand" placeholder="P-24601" autocomplete="off">
+  </div>
+
+  <div class="f">
+    <div class="f-top pair-head">
+      <span class="col-main"><label for="role">Role <span class="req">*</span></label>
+        <button type="button" class="info" data-p="p-role" aria-expanded="false" aria-controls="p-role">i</button></span>
+      <label for="level" class="col-side">Level <span class="req">*</span></label>
+    </div>
+    <div class="panel" id="p-role">
+      <p><b>What</b> — the req title as posted, and the level as your organisation writes it. Two fields so they stay separable later. Whatever convention you use is fine, as long as it's the one everyone else uses.</p>
+      <p><b>Why</b> — the bar is level-specific, and so is loop length. Senior roles take about 37% longer to fill than junior ones, and comparing scores across levels without recording the level produces nonsense.</p>
+      <p>Keeping level in its own field is what lets you group by it. Buried inside a title string it can't be sorted, filtered or counted without someone cleaning the data by hand first.</p>
+      <cite>Ashby Recruiting Operations Benchmarks, 2026</cite>
+    </div>
+    <div class="pair">
+      <input type="text" id="role" name="role" placeholder="Backend engineer" aria-label="Role title" autocomplete="off">
+      <input type="text" id="level" name="level" placeholder="L5" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="f">
+    <div class="f-top"><span class="lbl">Position in loop <span class="req">*</span></span>
+      <button type="button" class="info" data-p="p-pos" aria-expanded="false" aria-controls="p-pos">i</button></div>
+    <div class="panel" id="p-pos">
+      <p><b>What</b> — which scored round this was, and how many scored rounds the loop has. Round 3 of 5. Count only interviews that produce a scorecard; leave out the recruiter screen and team-match calls.</p>
+      <p><b>Why</b> — this is the field almost nobody stores, and it's the one that makes the interesting questions askable. Google's finding that the fifth interviewer adds about one percent of extra confidence could only be calculated because position was known. Without it you can count rounds but never learn which round is carrying the decision.</p>
+      <cite>Bock, Work Rules! (2015), crediting Todd Carlisle</cite>
+    </div>
+    <div class="slot">
+      <span>Round</span>
+      <input type="number" id="pos" name="pos" min="1" max="12" inputmode="numeric" step="1" placeholder="3" aria-label="Round number">
+      <span>of</span>
+      <input type="number" id="total" name="total" min="1" max="12" inputmode="numeric" step="1" placeholder="5" aria-label="Total scored rounds">
+      <span>scored rounds</span>
+    </div>
+    <div class="flag" id="flag-slot" role="alert"></div>
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="eid">Your employee ID <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-who" aria-expanded="false" aria-controls="p-who">i</button></div>
+    <div class="panel" id="p-who">
+      <p><b>What</b> — your employee ID, not your name. Name is optional below and only there to make the record readable at debrief.</p>
+      <p><b>Why</b> — an ID follows you across every loop you ever sit on. That's the point. It means the interviewer becomes something you can look at over time rather than one round on one req, and questions that are currently unanswerable start having answers: does this person pass everyone, does their 3 mean what everyone else's 3 means, do the candidates they championed work out.</p>
+      <p>Names can't carry that. Two John Smiths collapse into one record, one John Smith splits into four depending on how he was typed that day, and people change their names. Match on names and the pattern you were looking for dissolves into noise before you can see it.</p>
+      <p>Interviewer-level patterns are usually the biggest finding in any hiring dataset and the most fixable one. Some people run a full point harsher than their peers against the same rubric, for years, and nobody notices because nobody is counting.</p>
+    </div>
+    <input type="text" id="eid" name="eid" placeholder="e.g. E-10442" autocomplete="off">
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="who">Your name <span style="color:var(--muted);font-weight:400">optional</span></label></div>
+    <input type="text" id="who" name="who" placeholder="Jean Valjean" autocomplete="off">
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="seat">Your relationship to the hiring team <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-seat" aria-expanded="false" aria-controls="p-seat">i</button></div>
+    <div class="panel" id="p-seat">
+      <p><b>What</b> — where you sit relative to the team that's hiring. Pick the closest.</p>
+      <p><b>Why</b> — four interviewers who all report to the same manager are four samples of one viewpoint. Both Google and Amazon deliberately place someone from outside the hiring team late in the loop, and Amazon's Bar Raiser exists entirely to occupy that seat. If the last round is always another teammate, redundancy is the expected result rather than a surprise.</p>
+    </div>
+    <select id="seat" name="seat">
+      <option value="">Choose one</option>
+      <option value="HM">Hiring manager for this role</option>
+      <option value="PEER">Peer on the hiring team</option>
+      <option value="XFN">Cross-functional partner</option>
+      <option value="EXT">Outside the hiring team entirely</option>
+      <option value="SKIP">Skip-level or senior leader</option>
+      <option value="REC">Recruiter or sourcer</option>
+    </select>
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="notice">Notice you were given <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-notice" aria-expanded="false" aria-controls="p-notice">i</button></div>
+    <div class="panel" id="p-notice">
+      <p><b>What</b> — days between the interview landing on your calendar and the interview happening. Same-day is 0.</p>
+      <p><b>Why</b> — this one surprises people. Across 5.1 million interview events, interviewers given one day's notice returned a passing score 68.2% of the time; at seven days' notice it was 63.2%. The candidate isn't the variable. Less prepared interviewers pass more people, which means every team optimising purely for scheduling speed is quietly buying a looser bar.</p>
+      <cite>Ashby Recruiting Coordination report, October 2024. Association, not proven cause.</cite>
+    </div>
+    <div class="suffix">
+      <input type="number" id="notice" name="notice" min="0" max="60" inputmode="numeric" placeholder="3" aria-label="Days of notice">
+      <span>days</span>
+    </div>
+    <div class="flag" id="flag-notice"><b>Short notice.</b> At a day or less, scores skew about five points more generous than they do with a week's warning. Worth a second read of your own rating before you submit.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><h2>How you scored it</h2><span>the field that makes or breaks the data</span></div>
+
+  <div class="f">
+    <div class="f-top"><span class="lbl">Before writing this, had you heard anything? <span class="req">*</span></span>
+      <button type="button" class="info" data-p="p-ind" aria-expanded="false" aria-controls="p-ind">i</button></div>
+    <div class="panel" id="p-ind">
+      <p><b>What</b> — whether your score was formed independently, or after exposure to someone else's view of this candidate.</p>
+      <p><b>Why</b> — this is the single most load-bearing field on the form. The moment interviewers confer before scoring, every later scorecard is partly an echo of the earlier ones, and no one can work out what each round actually contributed. Answering honestly costs you nothing and keeps the record usable; a contaminated record that looks clean is worse than one that's flagged.</p>
+      <p>Independent scoring is also the first of the four things Google names as making an interview structured, alongside vetted questions, a shared rubric, and interviewer calibration.</p>
+      <cite>Google re:Work, structured interviewing guide</cite>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="disc" value="IND">
+        <span><span class="o-main">Nothing — I formed this on my own</span><span class="o-sub">No debrief, no scorecards read, no hallway conversation</span></span></label>
+      <label><input type="radio" name="disc" value="TALK">
+        <span><span class="o-main">I talked to another interviewer first</span><span class="o-sub">Any conversation about this candidate, however brief</span></span></label>
+      <label><input type="radio" name="disc" value="READ">
+        <span><span class="o-main">I read another scorecard first</span><span class="o-sub">Including a summary or a rating in the ATS</span></span></label>
+    </div>
+    <div class="flag" id="flag-disc"><b>Flagged as non-independent.</b> The rating still counts for the hiring decision. It just can't be used to measure what this round added, so analysis will exclude it.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><h2>The assessment</h2><span>what you actually saw</span></div>
+
+  <div class="f">
+    <div class="f-top"><label for="attr">What this round assessed <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-attr" aria-expanded="false" aria-controls="p-attr">i</button></div>
+    <div class="panel" id="p-attr">
+      <p><b>What</b> — the attribute from your rubric that this round was designed to test. One per round.</p>
+      <p><b>Why</b> — a rubric only works if each round owns a different piece of it. Two rounds testing the same thing is where redundancy actually comes from, and it's invisible unless every scorecard names its attribute. It also means that when the rubric changes, you know which historical records still apply.</p>
+    </div>
+    <input type="text" id="attr" name="attr" placeholder="e.g. Systems design, or Collaboration" autocomplete="off">
+  </div>
+
+  <div class="f">
+    <div class="f-top"><span class="lbl">Rating <span class="req">*</span></span>
+      <button type="button" class="info" data-p="p-rate" aria-expanded="false" aria-controls="p-rate">i</button></div>
+    <div class="panel" id="p-rate">
+      <p><b>What</b> — a four-point scale with no midpoint, so you have to come down on one side.</p>
+      <p><b>Why</b> — the gap between 2 and 3 is the decision. When interviewer pairs disagree, roughly half the time they're one point apart, and nearly half of those straddle exactly this line. Your 2 and a colleague's 3 is not a rounding difference, it's an argument, and the debrief should treat it as one.</p>
+      <p>Interviewer pairs agree exactly 62.5% of the time. If your rating differs from someone else's, that's ordinary rather than a sign one of you was wrong.</p>
+      <cite>Ashby Recruiting Operations Benchmarks, 2026</cite>
+    </div>
+    <div class="rate">
+      <label data-v="1"><input type="radio" name="rating" value="1"><span class="n">1</span><span class="t">Strong no</span></label>
+      <label data-v="2"><input type="radio" name="rating" value="2"><span class="n">2</span><span class="t">No</span></label>
+      <label data-v="3"><input type="radio" name="rating" value="3"><span class="n">3</span><span class="t">Yes</span></label>
+      <label data-v="4"><input type="radio" name="rating" value="4"><span class="n">4</span><span class="t">Strong yes</span></label>
+    </div>
+    <div class="threshold">the line sits here</div>
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="evid">Evidence <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-evid" aria-expanded="false" aria-controls="p-evid">i</button></div>
+    <div class="panel" id="p-evid">
+      <p><b>What</b> — what the candidate said or did that produced your rating. Specifics, not impressions. "Walked through the retry logic and caught the duplicate-write case unprompted" rather than "strong technically".</p>
+      <p><b>Why</b> — written detail is the part that has actually been shown to predict outcomes. In a study of 7,650 hires, the number of concrete job-related capabilities an interviewer named in their notes tracked with later performance and promotions, and inversely with turnover. The number on its own carried far less.</p>
+      <cite>Frontiers in Psychology, 2020</cite>
+    </div>
+    <textarea id="evid" name="evid" placeholder="What you asked, what they did with it, and what that told you"></textarea>
+    <p class="help"><span id="evidCount">0</span> of 90 characters minimum. Three beats make it useful: what you asked, what they did with it, and what that told you. Describe what happened rather than your impression of it &mdash; "caught the duplicate-write case in the retry logic unprompted", not "strong technically".</p>
+  </div>
+
+  <div class="f">
+    <div class="f-top"><label for="rec">Recommendation <span class="req">*</span></label>
+      <button type="button" class="info" data-p="p-rec" aria-expanded="false" aria-controls="p-rec">i</button></div>
+    <div class="panel" id="p-rec">
+      <p><b>What</b> — your call. Two options on purpose. If you're torn, pick the one you'd defend out loud and say why in the evidence box; the debrief is where the argument belongs, not this field.</p>
+      <p><b>Why</b> — a "maybe" costs someone else the decision you were asked to make, and a loop full of them tells you nothing. Owning the call is also what makes the record worth anything later: scores only prove useful if you can check them against real decisions, and a hedge isn't one.</p>
+      <p>It's stored separately from your rating deliberately. Keep the score and the call in one field and you can never test whether the scores are driving outcomes or something else is.</p>
+      <p>Fill this in for candidates you're rejecting too. At organisations under 25 people, scorecards get completed 66% of the time for people who are hired and 47% for people who aren't — and only about 4% of companies contact every rejected applicant. The half of the funnel that says no is the half nobody writes down.</p>
+      <cite>Ashby, 2026; Greenhouse via Axios, 2024</cite>
+    </div>
+    <div class="call">
+      <label data-v="yes"><input type="radio" name="rec" value="ADVANCE"><span>Advance</span></label>
+      <label data-v="no"><input type="radio" name="rec" value="HOLD"><span>Don't advance</span></label>
+    </div>
+  </div>
+</section>
+
+<div class="actions">
+  <button type="button" class="act primary" id="submit">Save record</button>
+  <button type="button" class="act ghost" id="clear">Clear form</button>
+</div>
+<p class="saved" id="status"></p>
+
+<div class="out" id="out">
+  <h3 id="outHead">Record complete</h3>
+  <dl class="summary" id="summary"></dl>
+  <p class="where">Paste this into the scorecard field in your ATS. That's where it can be matched to the rest of the loop, to the decision, and to what happens after the hire. A file sitting in someone's inbox can't be.</p>
+  <div class="actions" style="margin-top:1.1rem;padding-top:1.1rem">
+    <button type="button" class="act primary" id="copy">Copy for your ATS</button>
+    <button type="button" class="act ghost" id="pdf" hidden>Download PDF</button>
+    <button type="button" class="act ghost" id="csv" hidden>Download CSV</button>
+    <button type="button" class="act ghost" id="dl" hidden>Download JSON</button>
+    <button type="button" class="act ghost" id="print" hidden>Print</button>
+  </div>
+</div>
+
+<div class="connect">
+  <div class="connect-head">
+    <button type="button" class="link" id="connectToggle" aria-expanded="false">Connect a sheet</button>
+    <button type="button" class="info" data-p="p-connect" aria-expanded="false" aria-controls="p-connect">i</button>
+  </div>
+  <div class="panel" id="p-connect" role="region">
+    <p><b>What this does</b> &mdash; every record you save posts straight into a Google Sheet you own, as a new row. Nothing to copy, attach or chase. That sheet is the tracker: group the rows by candidate reference to see a whole loop, or by employee ID to see one interviewer across every loop they've sat on.</p>
+    <p><b>Setting it up</b> takes about five minutes, once. You only need to do it if you're the person collecting the records.</p>
+    <p><b>1.</b> Create a new Google Sheet.</p>
+    <p><b>2.</b> Extensions &rarr; Apps Script. Delete the placeholder code and paste in the collection script.</p>
+    <p><b>3.</b> Deploy &rarr; New deployment. Set type to <b>Web app</b>, execute as <b>Me</b>, and access to <b>Anyone</b>. Deploy, then authorise when Google asks.</p>
+    <p><b>4.</b> Copy the web app URL it gives you. It ends in <b>/exec</b>.</p>
+    <p><b>5.</b> Paste it below and press Save URL.</p>
+    <p><b>On that "Anyone" setting</b> &mdash; the form runs in a browser with nobody logged in, so the endpoint has to accept anonymous posts. Anyone holding the URL can add a row; it does not let them read the sheet. Treat the URL as internal. If a row ever looks wrong, the sheet is yours and you can delete it.</p>
+    <p><b>To check it worked</b>, paste the /exec URL into a browser. You should see a short confirmation message. A login screen or an error means the access setting is wrong &mdash; redo step 3.</p>
+    <p><b>If you change the script later</b>, go to Deploy &rarr; Manage deployments and publish a <b>new version</b>. Editing the code alone doesn't update the live web app.</p>
+    <cite>The URL is stored in this browser only, so everyone connects their own copy.</cite>
+  </div>
+  <div class="connect-body" id="connectBody">
+    <p>Paste the web app URL from the collection script. Records will post straight to that sheet when you save, and you'll still get the copy and download options.</p>
+    <input type="text" id="endpoint" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" spellcheck="false">
+    <div class="connect-actions">
+      <button type="button" class="act ghost" id="saveEndpoint">Save URL</button>
+      <button type="button" class="act ghost" id="clearEndpoint">Disconnect</button>
+    </div>
+    <p class="connect-state" id="connectState"></p>
+  </div>
+</div>
+
+<footer class="byline">
+  <p>Interview Record</p>
+  <p>by <strong>Kyle Byrd</strong></p>
+</footer>
+
+</form>
+</div>
+
+<script>
+(function(){
+  var F=document.getElementById('form');
+  var KEY='interview-record-draft';
+  var EKEY='interview-record-endpoint';
+
+  /* Optional: hard-code the web app URL here to ship a pre-connected
+     copy. Leave blank to let each person paste their own below. */
+  var ENDPOINT_DEFAULT='';
+
+  function endpoint(){
+    try{return window.localStorage.getItem(EKEY)||ENDPOINT_DEFAULT}
+    catch(e){return ENDPOINT_DEFAULT}
+  }
+
+  function post(rec){
+    var url=endpoint();
+    if(!url)return Promise.resolve(null);
+    var body=JSON.parse(JSON.stringify(rec));
+    delete body._disc;
+    /* text/plain keeps this a simple request, so the browser skips the
+       CORS preflight that Apps Script web apps cannot answer. */
+    return fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(body),
+      redirect:'follow'
+    }).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.text();
+    }).then(function(t){
+      try{var j=JSON.parse(t);if(j&&j.ok===false)throw new Error(j.error||'rejected')}catch(e){
+        if(e&&e.message&&e.message!=='Unexpected token')throw e;
+      }
+      return true;
+    });
+  }
+
+  // info panels
+  document.querySelectorAll('.info').forEach(function(b){
+    b.addEventListener('click',function(){
+      var p=document.getElementById(b.dataset.p);
+      var open=p.classList.toggle('open');
+      b.setAttribute('aria-expanded',open?'true':'false');
+    });
+  });
+
+  function val(id){var e=document.getElementById(id);return e?e.value.trim():''}
+  function radio(n){var e=F.querySelector('input[name="'+n+'"]:checked');return e?e.value:''}
+
+  var SEAT={HM:'HM',PEER:'PEER',XFN:'XFN',EXT:'EXT',SKIP:'SKIP',REC:'REC'};
+  var DISC={IND:'IND',TALK:'CONF-talk',READ:'CONF-read'};
+
+  function notation(){
+    var p=val('pos'),t=val('total'),s=val('seat'),n=val('notice'),d=radio('disc'),r=radio('rating');
+    return [
+      (p&&t)?'R'+p+'/'+t:'R_/_',
+      s?SEAT[s]:'seat',
+      n!==''?'N'+n:'N_',
+      d?DISC[d]:'discipline',
+      r?r+'/4':'rating'
+    ].join(' \u00b7 ');
+  }
+
+  var REQ=['cand','role','level','pos','total','eid','seat','notice','attr','evid'];
+  var OPT=['who'];
+  var MIN_EVID=90;
+
+  function refresh(){
+    var ev=val('evid'),h=document.getElementById('evidCount');
+    if(h){
+      h.textContent=ev.length;
+      var w=h.parentNode;
+      w.classList.toggle('ok',ev.length>=MIN_EVID);
+      w.classList.toggle('short',ev.length>0&&ev.length<MIN_EVID);
+    }
+    var nv=val('notice');
+    document.getElementById('flag-notice').classList.toggle('on',nv!==''&&Number(nv)<=1);
+    var d=radio('disc');
+    document.getElementById('flag-disc').classList.toggle('on',d==='TALK'||d==='READ');
+
+    save();
+  }
+
+  function collect(){
+    return {
+      candidate:val('cand'),role:val('role'),level:val('level'),
+      round:Number(val('pos'))||null,rounds_total:Number(val('total'))||null,
+      interviewer_id:val('eid'),interviewer_name:val('who')||null,seat:val('seat'),
+      notice_days:val('notice')===''?null:Number(val('notice')),
+      independent:radio('disc')==='IND',
+      exposure:radio('disc')==='IND'?'none':(radio('disc')==='TALK'?'conversation':'scorecard'),
+      attribute:val('attr'),rating:Number(radio('rating'))||null,
+      evidence:val('evid'),recommendation:radio('rec'),
+      submitted_at:new Date().toISOString(),
+      notation:notation()
+    };
+  }
+
+  function save(){
+    try{
+      var d={};REQ.concat(OPT).forEach(function(k){d[k]=val(k)});
+      d.disc=radio('disc');d.rating=radio('rating');d.rec=radio('rec');
+      window.localStorage.setItem(KEY,JSON.stringify(d));
+    }catch(e){}
+  }
+
+  function restore(){
+    try{
+      var raw=window.localStorage.getItem(KEY);
+      if(!raw)return;
+      var d=JSON.parse(raw);
+      REQ.concat(OPT).forEach(function(k){var e=document.getElementById(k);if(e&&d[k])e.value=d[k]});
+      if(d.disc){var a=F.querySelector('input[name="disc"][value="'+d.disc+'"]');if(a)a.checked=true}
+      if(d.rating){var b=F.querySelector('input[name="rating"][value="'+d.rating+'"]');if(b)b.checked=true}
+      if(d.rec){var c=F.querySelector('input[name="rec"][value="'+d.rec+'"]');if(c)c.checked=true}
+      document.getElementById('status').textContent='Unfinished record restored.';
+    }catch(e){}
+  }
+
+  F.addEventListener('input',refresh);
+  F.addEventListener('change',refresh);
+  F.addEventListener('input',function(e){if(e.target.classList)e.target.classList.remove('miss')});
+  F.addEventListener('change',function(e){
+    var g=e.target.closest?e.target.closest('.opts,.rate,.call'):null;
+    if(g)g.classList.remove('miss');
+    if(e.target.classList)e.target.classList.remove('miss');
+  });
+
+  // round / total consistency: the round can never be higher than the total
+  function slotProblem(){
+    var p=val('pos'),t=val('total'),pn=Number(p),tn=Number(t);
+    if(p!==''&&(!Number.isInteger(pn)||pn<1||pn>12))return 'Round number must be a whole number from 1 to 12.';
+    if(t!==''&&(!Number.isInteger(tn)||tn<1||tn>12))return 'Total rounds must be a whole number from 1 to 12.';
+    if(p!==''&&t!==''&&pn>tn)return 'Round '+pn+' can’t be higher than the total of '+tn+' scored rounds. Fix the round number or the total.';
+    return '';
+  }
+  function slotCheck(){
+    var pe=document.getElementById('pos'),te=document.getElementById('total');
+    var msg=slotProblem(),fl=document.getElementById('flag-slot');
+    fl.textContent=msg;
+    fl.classList.toggle('on',!!msg);
+    if(msg){pe.classList.add('miss');te.classList.add('miss')}
+    var p=Number(pe.value),t=Number(te.value);
+    pe.max=(te.value.trim()!==''&&t>=1&&t<=12)?t:12;
+    te.min=(pe.value.trim()!==''&&p>=1&&p<=12)?p:1;
+  }
+  F.addEventListener('input',slotCheck);
+  F.addEventListener('change',slotCheck);
+
+  var SEATLBL={HM:'Hiring manager',PEER:'Peer on hiring team',XFN:'Cross-functional partner',
+    EXT:'Outside the hiring team',SKIP:'Skip-level or senior leader',REC:'Recruiter or sourcer'};
+  var RATELBL={'1':'Strong no','2':'No','3':'Yes','4':'Strong yes'};
+  var RECLBL={ADVANCE:'Advance',HOLD:"Don't advance"};
+  var DISCLBL={IND:'Independent, formed before any discussion',
+    TALK:'Formed after talking to another interviewer',
+    READ:'Formed after reading another scorecard'};
+
+  function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML}
+
+  function render(r){
+    var rows=[
+      ['Candidate',esc(r.candidate)],
+      ['Role',esc(r.role)+' &mdash; '+esc(r.level)],
+      ['Slot','<span class="pill">R'+r.round+'/'+r.rounds_total+'</span>'],
+      ['Interviewer',esc(r.interviewer_name?r.interviewer_name+' ('+r.interviewer_id+')':r.interviewer_id)+' &mdash; '+esc(SEATLBL[r.seat]||r.seat)],
+      ['Notice',r.notice_days+(r.notice_days===1?' day':' days')],
+      ['Scoring',esc(DISCLBL[r._disc])],
+      ['Assessed',esc(r.attribute)],
+      ['Rating','<span class="pill">'+r.rating+'/4</span> &mdash; '+esc(RATELBL[String(r.rating)])],
+      ['Recommendation',esc(RECLBL[r.recommendation]||r.recommendation)]
+    ];
+    var h=rows.map(function(x){return '<dt>'+x[0]+'</dt><dd>'+x[1]+'</dd>'}).join('');
+    h+='<dt>Evidence</dt><dd class="ev">'+esc(r.evidence)+'</dd>';
+    document.getElementById('summary').innerHTML=h;
+  }
+
+  function asText(r){
+    return [
+      'Slot: R'+r.round+'/'+r.rounds_total+'   Seat: '+(SEATLBL[r.seat]||r.seat),
+      'Interviewer: '+(r.interviewer_name?r.interviewer_name+' ('+r.interviewer_id+')':r.interviewer_id),
+      'Notice given: '+r.notice_days+' day'+(r.notice_days===1?'':'s'),
+      'Scoring: '+DISCLBL[r._disc],
+      '',
+      'Assessed: '+r.attribute,
+      'Rating: '+r.rating+'/4 ('+RATELBL[String(r.rating)]+')',
+      'Recommendation: '+(RECLBL[r.recommendation]||r.recommendation),
+      '',
+      'Evidence:',
+      r.evidence,
+      '',
+      'Candidate '+r.candidate+' | '+r.role+', '+r.level+' | submitted '+r.submitted_at
+    ].join('\n');
+  }
+
+  var current=null;
+
+  var LABELS={cand:'candidate reference',role:'role title',
+    level:'level',pos:'round number',
+    total:'total rounds',eid:'your employee ID',seat:'your relationship to the hiring team',
+    notice:'notice you were given',attr:'what this round assessed',evid:'evidence'};
+
+  function validate(){
+    var missing=[];
+    document.querySelectorAll('.miss').forEach(function(e){e.classList.remove('miss')});
+    REQ.forEach(function(k){
+      if(val(k)===''){
+        var e=document.getElementById(k);
+        if(e)e.classList.add('miss');
+        missing.push({el:e,name:LABELS[k]});
+      }
+    });
+    if(val('evid')!==''&&val('evid').length<MIN_EVID){
+      var ev=document.getElementById('evid');
+      ev.classList.add('miss');
+      missing.push({el:ev,name:'more detail in evidence ('+val('evid').length+' of '+MIN_EVID+' characters)'});
+    }
+    var sp=slotProblem();
+    if(sp){
+      var pe=document.getElementById('pos'),te=document.getElementById('total');
+      pe.classList.add('miss');te.classList.add('miss');
+      missing.push({el:pe,name:'a round number that is a whole number no higher than total rounds'});
+    }
+    if(!radio('disc')){var g=document.querySelector('.opts');g.classList.add('miss');missing.push({el:g,name:'how you scored it'})}
+    if(!radio('rating')){var r=document.querySelector('.rate');r.classList.add('miss');missing.push({el:r,name:'rating'})}
+    if(!radio('rec')){var c=document.querySelector('.call');c.classList.add('miss');missing.push({el:c,name:'recommendation'})}
+    return missing;
+  }
+
+  document.getElementById('submit').addEventListener('click',function(){
+    var missing=validate();
+    if(missing.length){
+      var st=document.getElementById('status');
+      st.classList.add('warn');
+      st.textContent=missing.length===1
+        ? 'Still needed: '+missing[0].name+'.'
+        : 'Still needed: '+missing.length+' fields, starting with '+missing[0].name+'.';
+      document.getElementById('out').classList.remove('open');
+      if(missing[0].el){
+        missing[0].el.scrollIntoView({behavior:'smooth',block:'center'});
+        if(missing[0].el.focus)try{missing[0].el.focus({preventScroll:true})}catch(e){}
+      }
+      return;
+    }
+    var st=document.getElementById('status');
+    st.classList.remove('warn');
+    current=collect();
+    current._disc=radio('disc');
+    render(current);
+    document.getElementById('out').classList.add('open');
+    document.getElementById('out').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+    if(!endpoint()){
+      st.className='saved';
+      st.textContent='Recorded at '+new Date().toLocaleTimeString()+'. Copy, download or print it below.';
+      return;
+    }
+    st.className='saved sending';
+    st.textContent='Sending to your sheet\u2026';
+    post(current).then(function(){
+      st.className='saved sent';
+      st.textContent='Saved to your sheet at '+new Date().toLocaleTimeString()+'.';
+    }).catch(function(err){
+      st.className='saved failed';
+      st.textContent='Could not reach the sheet ('+err.message+'). The record is below \u2014 copy or download it so it is not lost.';
+    });
+  });
+
+  document.getElementById('copy').addEventListener('click',function(){
+    if(!current)return;
+    var btn=this,t=asText(current);
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){
+        btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy for your ATS'},1600);
+      }).catch(function(){btn.textContent='Copy blocked, use Print instead'});
+    }else{btn.textContent='Copy blocked, use Print instead'}
+  });
+
+  /* window.print() is blocked inside the sandboxed artifact frame, so the
+     Print button only appears when this file is opened on its own. In the
+     frame we offer a generated PDF instead. */
+  var inFrame=(function(){try{return window.self!==window.top}catch(e){return true}})();
+  var printBtn=document.getElementById('print');
+  if(!inFrame){
+    printBtn.hidden=false;
+    printBtn.addEventListener('click',function(){window.print()});
+  }
+
+  /* Header row plus one data row, in the same column order the
+     collection sheet uses, so exports append cleanly to a master
+     worksheet rather than needing to be re-mapped. */
+  var CSV_COLUMNS=[
+    ['Candidate','candidate'],['Role','role'],['Level','level'],
+    ['Round','round'],['Rounds total','rounds_total'],['Slot','_slot'],
+    ['Employee ID','interviewer_id'],['Name','interviewer_name'],
+    ['Seat','seat'],['Notice (days)','notice_days'],
+    ['Independent','_independent'],['Exposure','exposure'],
+    ['Attribute','attribute'],['Rating','rating'],
+    ['Recommendation','recommendation'],['Evidence','evidence'],
+    ['Submitted at','submitted_at']
+  ];
+
+  function csvCell(v){
+    if(v===null||v===undefined)return '';
+    var t=String(v);
+    return /[",\n\r]/.test(t) ? '"'+t.replace(/"/g,'""')+'"' : t;
+  }
+
+  function buildCsv(r){
+    var row=Object.assign({},r,{
+      _slot:'R'+r.round+'/'+r.rounds_total,
+      _independent:r.independent?'Yes':'No'
+    });
+    var head=CSV_COLUMNS.map(function(c){return csvCell(c[0])}).join(',');
+    var data=CSV_COLUMNS.map(function(c){return csvCell(row[c[1]])}).join(',');
+    /* BOM keeps Excel from mangling non-ASCII characters in evidence. */
+    return '\ufeff'+head+'\r\n'+data+'\r\n';
+  }
+
+  function buildPdf(r){
+    var jsPDF=(window.jspdf||{}).jsPDF;
+    if(!jsPDF)return null;
+    var d=new jsPDF({unit:'pt',format:'letter'});
+    var L=56,W=500,y=64;
+
+    function page(){if(y>700){d.addPage();y=64}}
+
+    d.setFont('helvetica','bold');d.setFontSize(15);d.setTextColor(20);
+    d.text('Interview record',L,y);
+    d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(130);
+    d.text('by Kyle Byrd',L+W,y,{align:'right'});
+    y+=9;
+    d.setDrawColor(150);d.line(L,y,L+W,y);y+=24;
+
+    /* One atomic field per line, label and value on the same baseline.
+       Text extractors and parsers read this as discrete lines rather than
+       collapsing a two-column layout into one run-on string. */
+    function line(label,value){
+      page();
+      var lab=label+': ';
+      d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(60);
+      d.text(lab,L,y);
+      var w=d.getTextWidth(lab);
+      d.setFont('helvetica','normal');d.setTextColor(20);
+      var parts=d.splitTextToSize(String(value===''||value===null||value===undefined?'—':value),W-w);
+      d.text(parts,L+w,y);
+      y+=parts.length*14+3;
+    }
+
+    line('Candidate',r.candidate);
+    line('Role',r.role);
+    line('Level',r.level);
+    line('Slot','R'+r.round+'/'+r.rounds_total);
+    line('Round',r.round);
+    line('Rounds in loop',r.rounds_total);
+    line('Employee ID',r.interviewer_id);
+    line('Interviewer',r.interviewer_name||'not given');
+    line('Seat',SEATLBL[r.seat]||r.seat);
+    line('Notice',r.notice_days+(r.notice_days===1?' day':' days'));
+    line('Independent',r.independent?'Yes':'No');
+    line('Exposure',DISCLBL[r._disc]);
+    line('Assessed',r.attribute);
+    line('Rating',r.rating+' of 4');
+    line('Rating meaning',RATELBL[String(r.rating)]);
+    line('Recommendation',RECLBL[r.recommendation]||r.recommendation);
+    line('Submitted',r.submitted_at);
+
+    y+=10;page();
+    d.setDrawColor(200);d.line(L,y,L+W,y);y+=20;
+    d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(60);
+    d.text('Evidence',L,y);y+=16;
+    d.setFont('helvetica','normal');d.setFontSize(10.5);d.setTextColor(20);
+    var ev=d.splitTextToSize(String(r.evidence||''),W);
+    for(var i=0;i<ev.length;i++){page();d.text(ev[i],L,y);y+=14}
+
+    /* Verbatim record for anything parsing this file. */
+    y+=22;page();
+    d.setDrawColor(210);d.line(L,y,L+W,y);y+=18;
+    d.setFont('helvetica','bold');d.setFontSize(8);d.setTextColor(130);
+    d.text('MACHINE-READABLE RECORD (JSON)',L,y);y+=13;
+    var clean=JSON.parse(JSON.stringify(r));delete clean._disc;
+    d.setFont('courier','normal');d.setFontSize(7.5);d.setTextColor(110);
+    var js=d.splitTextToSize(JSON.stringify(clean,null,1),W);
+    for(var k=0;k<js.length;k++){
+      if(y>740){d.addPage();y=64}
+      d.text(js[k],L,y);y+=9;
+    }
+
+    return d.output('blob');
+  }
+
+  (function(){
+    if(!(window.claude&&window.claude.use))return;
+    window.claude.use('downloads').then(function(d){
+      if(!d)return;
+
+      function stem(){
+        return 'record-'+(current.candidate||'candidate').replace(/[^\w-]/g,'')+'-R'+current.round;
+      }
+      function flash(b,msg,back){
+        b.textContent=msg;setTimeout(function(){b.textContent=back},1700);
+      }
+
+      var pb=document.getElementById('pdf');
+      pb.hidden=false;
+      pb.addEventListener('click',function(){
+        if(!current)return;
+        var blob=buildPdf(current);
+        if(!blob){flash(pb,'PDF unavailable','Download PDF');return}
+        d.save({filename:stem()+'.pdf',data:blob})
+          .then(function(){flash(pb,'Saved','Download PDF')})
+          .catch(function(e){flash(pb,e&&e.code==='declined'?'Cancelled':'Save failed','Download PDF')});
+      });
+
+      var cb=document.getElementById('csv');
+      cb.hidden=false;
+      cb.addEventListener('click',function(){
+        if(!current)return;
+        d.save({filename:stem()+'.csv',data:buildCsv(current)})
+          .then(function(){flash(cb,'Saved','Download CSV')})
+          .catch(function(e){flash(cb,e&&e.code==='declined'?'Cancelled':'Save failed','Download CSV')});
+      });
+
+      var b=document.getElementById('dl');
+      b.hidden=false;
+      b.addEventListener('click',function(){
+        if(!current)return;
+        var copy=JSON.parse(JSON.stringify(current));delete copy._disc;
+        d.save({filename:stem()+'.json',data:JSON.stringify(copy,null,2)})
+          .then(function(){flash(b,'Saved','Download JSON')})
+          .catch(function(e){flash(b,e&&e.code==='declined'?'Cancelled':'Save failed','Download JSON')});
+      });
+    }).catch(function(){});
+  })();
+
+  document.getElementById('clear').addEventListener('click',function(){
+    F.reset();
+    try{window.localStorage.removeItem(KEY)}catch(e){}
+    document.getElementById('out').classList.remove('open');
+    current=null;
+    document.querySelectorAll('.miss').forEach(function(e){e.classList.remove('miss')});
+    document.getElementById('status').classList.remove('warn');
+    document.getElementById('status').textContent='Form cleared.';
+    refresh();
+  });
+
+  var eIn=document.getElementById('endpoint');
+  var eState=document.getElementById('connectState');
+  var eBody=document.getElementById('connectBody');
+  var eToggle=document.getElementById('connectToggle');
+
+  function showEndpointState(){
+    var url=endpoint();
+    eState.className='connect-state'+(url?' live':'');
+    eState.textContent=url?'Connected. Saved records post to your sheet.':'Not connected. Records stay on this device until you copy, download or print them.';
+    eToggle.textContent=url?'Sheet connected':'Connect a sheet';
+  }
+
+  eToggle.addEventListener('click',function(){
+    var open=eBody.classList.toggle('open');
+    eToggle.setAttribute('aria-expanded',open?'true':'false');
+    if(open)eIn.value=endpoint();
+  });
+
+  document.getElementById('saveEndpoint').addEventListener('click',function(){
+    var v=eIn.value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){
+      eState.className='connect-state bad';
+      eState.textContent='That does not look like a deployed web app URL. It should start with https://script.google.com/macros/s/ and end in /exec.';
+      return;
+    }
+    try{v?window.localStorage.setItem(EKEY,v):window.localStorage.removeItem(EKEY)}catch(e){}
+    showEndpointState();
+  });
+
+  document.getElementById('clearEndpoint').addEventListener('click',function(){
+    try{window.localStorage.removeItem(EKEY)}catch(e){}
+    eIn.value='';
+    showEndpointState();
+  });
+
+  showEndpointState();
+  restore();
+  slotCheck();
+  refresh();
+})();
+</script>
+</body>
+</html>
